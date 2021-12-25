@@ -14,7 +14,7 @@ export default async function pixabayApi(query, page = 1) {
 
     if (!parsedResponse.totalHits)
       throw Error(
-        'Oooops, we could not find an anything. Write something another.',
+        `Oooops, we could not find "${query}". Write something another.`,
       );
 
     return parsedResponse;
