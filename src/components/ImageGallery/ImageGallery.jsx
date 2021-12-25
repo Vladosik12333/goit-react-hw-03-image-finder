@@ -28,9 +28,11 @@ export default class ImageGallery extends Component {
       this.fetchImages();
     }
 
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 1000);
+    if (prevResp !== nextResp || this.state.status === 'pending') {
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 1000);
+    }
   }
 
   onClickButton = () => {
