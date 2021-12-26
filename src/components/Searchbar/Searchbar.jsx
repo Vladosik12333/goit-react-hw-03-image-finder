@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SearchbarStyled } from './Searchbar.styled';
 import { AiOutlineSearch } from 'react-icons/ai';
-
+import propTypes from 'prop-types';
 export default class Searchbar extends Component {
   state = {
     search: '',
@@ -43,3 +43,7 @@ export default class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: propTypes.func.isRequired,
+};
