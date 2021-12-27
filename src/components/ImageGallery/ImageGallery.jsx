@@ -36,7 +36,7 @@ export default class ImageGallery extends Component {
   fetchImages = page => {
     const nextResp = this.props.search;
     this.setState({ status: 'pending' });
-    api(nextResp, page ?? this.state.page).then(resp => {
+    api(nextResp, page).then(resp => {
       if (typeof resp !== 'string') {
         this.setState(state => {
           return {
