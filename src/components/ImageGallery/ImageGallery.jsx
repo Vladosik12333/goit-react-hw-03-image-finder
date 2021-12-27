@@ -15,52 +15,46 @@ export default class ImageGallery extends Component {
   state = {
     status: 'idle',
     error: null,
-    images: null,
-    nextPage: 1,
+    images: [],
+    page: 1,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const prevResp = prevProps.search;
     const nextResp = this.props.search;
 
     if (prevResp !== nextResp) {
-      this.setState({ nextPage: 1, images: null });
-      this.fetchImages();
-    }
-
-    if (prevResp !== nextResp || this.state.status === 'pending') {
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 1000);
+      this.setState({ page: 1, images: [] });
+      this.fetchImages(1);
     }
   }
 
   onClickButton = () => {
-    this.fetchImages();
+    this.fetchImages(this.state.page);
   };
 
-  fetchImages = () => {
+  fetchImages = page => {
     const nextResp = this.props.search;
-
     this.setState({ status: 'pending' });
-    api(nextResp, this.state.nextPage).then(resp => {
+    api(nextResp, page ?? this.state.page).then(resp => {
       if (typeof resp !== 'string') {
         this.setState(state => {
-          if (state.images === null)
-            return { images: resp.hits, status: 'resolved' };
           return {
             images: [...state.images, ...resp.hits],
             status: 'resolved',
+            page: state.page + 1,
           };
         });
-        this.setState(state => {
-          state.nextPage++;
-        });
+        this.scrollToBottom();
         return;
       }
 
-      this.setState({ error: resp, status: 'rejected' });
-      this.setState({ nextPage: 1, images: null });
+      this.setState({
+        error: resp,
+        status: 'rejected',
+        page: 1,
+        images: [],
+      });
     });
   };
 
@@ -92,9 +86,8 @@ export default class ImageGallery extends Component {
                   key={id}
                   url={webformatURL}
                   tags={tags}
-                  onClickToModal={() =>
-                    this.props.onClickToModal(largeImageURL)
-                  }
+                  onClickToModal={this.props.onClickToModal}
+                  largeImageURL={largeImageURL}
                 />
               );
             })}
