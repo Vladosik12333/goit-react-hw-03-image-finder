@@ -27,6 +27,7 @@ export default class ImageGallery extends Component {
       this.setState({ page: 1, images: [] });
       this.fetchImages(1);
     }
+    this.scrollToBottom();
   }
 
   onClickButton = () => {
@@ -45,7 +46,6 @@ export default class ImageGallery extends Component {
             page: state.page + 1,
           };
         });
-        this.scrollToBottom();
         return;
       }
 
@@ -60,7 +60,7 @@ export default class ImageGallery extends Component {
 
   scrollToBottom = () => {
     window.scrollTo({
-      top: 999999999,
+      top: document.body.clientHeight,
       behavior: 'smooth',
     });
   };
