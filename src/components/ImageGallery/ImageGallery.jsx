@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import api from '../../service/pixabayApi';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Button from 'components/Button';
-import Loader from 'components/Loader';
 import { List } from './ImageGallery.styled';
 import propTypes from 'prop-types';
 
@@ -36,7 +35,6 @@ export default class ImageGallery extends Component {
 
   fetchImages = page => {
     const nextResp = this.props.search;
-    this.setState({ status: 'pending' });
     api(nextResp, page).then(resp => {
       if (typeof resp !== 'string') {
         this.setState(state => {
@@ -68,35 +66,33 @@ export default class ImageGallery extends Component {
   render() {
     const { status, error, images } = this.state;
 
-    if (status === 'pending') {
-      return <Loader />;
-    }
-
     if (status === 'rejected') {
       return <h1>{error}</h1>;
     }
 
-    if (status === 'resolved') {
-      return (
-        <>
-          <List>
-            {images.map(({ id, webformatURL, tags, largeImageURL }) => {
-              return (
-                <ImageGalleryItem
-                  key={id}
-                  url={webformatURL}
-                  tags={tags}
-                  onClickToModal={this.props.onClickToModal}
-                  largeImageURL={largeImageURL}
-                />
-              );
-            })}
-          </List>
-          <Button onClickButton={this.onClickButton} />
-        </>
-      );
-    }
-
-    return <></>;
+    return (
+      <>
+        {images.length !== 0 ? (
+          <>
+            <List>
+              {images.map(({ id, webformatURL, tags, largeImageURL }) => {
+                return (
+                  <ImageGalleryItem
+                    key={id}
+                    url={webformatURL}
+                    tags={tags}
+                    onClickToModal={this.props.onClickToModal}
+                    largeImageURL={largeImageURL}
+                  />
+                );
+              })}
+            </List>
+            <Button onClickButton={this.onClickButton} />
+          </>
+        ) : (
+          <></>
+        )}
+      </>
+    );
   }
 }
