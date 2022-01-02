@@ -7,10 +7,10 @@ export default async function pixabayApi(query, page = 1) {
       `${BASE_URL}?key=${KEY}&q=${query}&page=${page}&image_type=photo&orientation=horizontal&per_page=12`,
     );
 
-    const parsedResponse = await response.json();
-
     if (!response.ok)
       throw Error('Oooops, anything did not work. Try again :)');
+
+    const parsedResponse = await response.json();
 
     if (!parsedResponse.totalHits)
       throw Error(
@@ -19,6 +19,6 @@ export default async function pixabayApi(query, page = 1) {
 
     return parsedResponse;
   } catch (error) {
-    return error.message;
+    throw error;
   }
 }
